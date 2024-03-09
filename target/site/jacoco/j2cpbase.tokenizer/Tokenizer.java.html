@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Tokenizer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">j2cpbase</a> &gt; <a href="index.source.html" class="el_package">j2cpbase.tokenizer</a> &gt; <span class="el_source">Tokenizer.java</span></div><h1>Tokenizer.java</h1><pre class="source lang-java linenums">package j2cpbase.tokenizer;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+
+// TODO: regex version
+public class Tokenizer {
+    // BEGIN STATIC VARIABLES
+<span class="fc" id="L11">    public static final Map&lt;String, Token&gt; RESERVED_WORDS =</span>
+<span class="fc" id="L12">        new HashMap&lt;String, Token&gt;() {{</span>
+            // put(&quot;return&quot;, new ReturnToken());
+<span class="fc" id="L14">            put(&quot;let&quot;, new LetToken());</span>
+<span class="fc" id="L15">        }};</span>
+    // val SYMBOLS = Seq((&quot;==&quot;, DoubleEqualsToken),
+    //                   (&quot;=&quot;, SingleEqualsToken), ...
+<span class="fc" id="L18">    public static final List&lt;SymbolPair&gt; SYMBOLS =</span>
+<span class="fc" id="L19">        new ArrayList&lt;SymbolPair&gt;() {{</span>
+<span class="fc" id="L20">            add(new SymbolPair(&quot;==&quot;, new DoubleEqualsToken()));</span>
+<span class="fc" id="L21">            add(new SymbolPair(&quot;=&quot;, new SingleEqualsToken()));</span>
+<span class="fc" id="L22">            add(new SymbolPair(&quot;(&quot;, new LeftParenToken()));</span>
+<span class="fc" id="L23">            add(new SymbolPair(&quot;)&quot;, new RightParenToken()));</span>
+<span class="fc" id="L24">            add(new SymbolPair(&quot;+&quot;, new PlusToken()));</span>
+<span class="fc" id="L25">            add(new SymbolPair(&quot;-&quot;, new MinusToken()));</span>
+<span class="fc" id="L26">        }};</span>
+    // END STATIC VARIABLES
+    
+    // BEGIN INSTANCE VARIABLES
+    private final String input;
+    private int pos;
+    // END INSTANCE VARIABLES
+
+<span class="fc" id="L34">    public Tokenizer(final String input) {</span>
+<span class="fc" id="L35">        this.input = input;</span>
+<span class="fc" id="L36">        pos = 0;</span>
+<span class="fc" id="L37">    }</span>
+
+    // category 2: reserved words OR identifiers
+    // returns null if this isn't an identifier or reserved word
+    private Token tryTokenizeIdentifierOrReservedWord() {
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (Character.isLetter(input.charAt(pos))) {</span>
+<span class="fc" id="L43">            final StringBuffer read = new StringBuffer();</span>
+<span class="fc" id="L44">            read.append(input.charAt(pos));</span>
+<span class="fc" id="L45">            pos++;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">            while (pos &lt; input.length() &amp;&amp;</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">                   Character.isLetterOrDigit(input.charAt(pos))) {</span>
+<span class="fc" id="L48">                read.append(input.charAt(pos));</span>
+<span class="fc" id="L49">                pos++;</span>
+            }
+<span class="fc" id="L51">            final String asString = read.toString();</span>
+<span class="fc" id="L52">            Token reservedWord = RESERVED_WORDS.get(asString);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">            if (reservedWord != null) {</span>
+<span class="fc" id="L54">                return reservedWord;</span>
+            } else {
+<span class="nc" id="L56">                return new IdentifierToken(asString);</span>
+            }
+        } else {
+<span class="fc" id="L59">            return null;</span>
+        }
+    }
+    
+    // category 1: symbols
+    // +, -, ==, =, (, )
+    //
+    // returns null if this isn't a symbol
+    private Token tryTokenizeSymbol() {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        for (final SymbolPair pair : SYMBOLS) {</span>
+<span class="pc bpc" id="L69" title="1 of 2 branches missed.">            if (input.startsWith(pair.asString, pos)) {</span>
+<span class="nc" id="L70">                pos += pair.asString.length();</span>
+<span class="nc" id="L71">                return pair.asToken;</span>
+            }
+<span class="fc" id="L73">        }</span>
+<span class="fc" id="L74">        return null;</span>
+        // if (input.startsWith(&quot;==&quot;, pos)) {
+        //     pos += 2;
+        //     return new DoubleEqualsToken(); // a==Token
+        // } else if (input.startsWith(&quot;=&quot;, pos)) {
+        //     pos++;
+        //     return new SingleEqualsToken();
+        // } else if (input.startsWith(&quot;+&quot;, pos)) {
+        //     pos++;
+        //     return new PlusToken();
+        // } else if (input.startsWith(&quot;-&quot;, pos)) {
+        //     pos++;
+        //     return new MinusToken();
+        // } else if (input.startsWith(&quot;(&quot;, pos)) {
+        //     pos++;
+        //     return new LeftParenToken();
+        // } else if (input.startsWith(&quot;)&quot;, pos)) {
+        //     pos++;
+        //     return new RightParenToken();
+        // } else {
+        //     return null;
+        // }
+    }
+    // category 3: integers
+    // returns null if this isn't an integer
+    private Token tryTokenizeInteger() {
+<span class="fc" id="L100">        final StringBuffer read = new StringBuffer();</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">        while (pos &lt; input.length() &amp;&amp;</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">               Character.isDigit(input.charAt(pos))) {</span>
+<span class="fc" id="L103">            read.append(input.charAt(pos));</span>
+<span class="fc" id="L104">            pos++;</span>
+        }
+
+<span class="fc" id="L107">        final String asString = read.toString();</span>
+<span class="pc bpc" id="L108" title="1 of 2 branches missed.">        if (asString.length() == 0) {</span>
+<span class="nc" id="L109">            return null;</span>
+        } else {
+<span class="fc" id="L111">            return new IntegerLiteralToken(Integer.parseInt(asString));</span>
+        }
+    }
+
+    private void skipWhitespace() {
+<span class="fc bfc" id="L116" title="All 2 branches covered.">        while (pos &lt; input.length() &amp;&amp;</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">               Character.isWhitespace(input.charAt(pos))) {</span>
+<span class="fc" id="L118">            pos++;</span>
+        }
+<span class="fc" id="L120">    }</span>
+
+    // returns null if we are at end of input
+    private Token readToken() throws TokenizerException {
+<span class="fc" id="L124">        skipWhitespace();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        if (pos &lt; input.length()) {</span>
+<span class="fc" id="L126">            Token token = null;</span>
+<span class="fc bfc" id="L127" title="All 2 branches covered.">            if ((token = tryTokenizeIdentifierOrReservedWord()) == null &amp;&amp;</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">                (token = tryTokenizeSymbol()) == null &amp;&amp;</span>
+<span class="pc bpc" id="L129" title="1 of 2 branches missed.">                (token = tryTokenizeInteger()) == null) {</span>
+<span class="nc" id="L130">                throw new TokenizerException(&quot;Unrecognized character: &quot; + input.charAt(pos));</span>
+            } else {
+<span class="fc" id="L132">                return token;</span>
+            }
+        } else {
+<span class="fc" id="L135">            return null;</span>
+        }
+    }
+    
+    private List&lt;Token&gt; tokenize() throws TokenizerException {
+<span class="fc" id="L140">        final List&lt;Token&gt; tokens = new ArrayList&lt;Token&gt;();</span>
+<span class="fc" id="L141">        Token token = null;</span>
+<span class="fc bfc" id="L142" title="All 2 branches covered.">        while ((token = readToken()) != null) {</span>
+<span class="fc" id="L143">            tokens.add(token);</span>
+        }
+<span class="fc" id="L145">        return tokens;</span>
+    }
+
+    public static List&lt;Token&gt; tokenize(final String input) throws TokenizerException {
+<span class="fc" id="L149">        return new Tokenizer(input).tokenize();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

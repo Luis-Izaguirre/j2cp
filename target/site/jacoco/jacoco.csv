@@ -1,0 +1,15 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+j2cpbase,j2cpbase.tokenizer,DoubleEqualsToken,7,3,0,0,3,1,3,1,3,1
+j2cpbase,j2cpbase.tokenizer,SymbolPair,50,9,6,0,8,4,6,1,3,1
+j2cpbase,j2cpbase.tokenizer,Tokenizer.new ArrayList() {...},0,63,0,0,0,8,0,1,0,1
+j2cpbase,j2cpbase.tokenizer,PlusToken,7,3,0,0,3,1,3,1,3,1
+j2cpbase,j2cpbase.tokenizer,Tokenizer.new HashMap() {...},0,10,0,0,0,3,0,1,0,1
+j2cpbase,j2cpbase.tokenizer,Tokenizer,34,224,6,26,5,49,6,19,0,9
+j2cpbase,j2cpbase.tokenizer,LetToken,4,6,0,0,2,2,2,2,2,2
+j2cpbase,j2cpbase.tokenizer,MinusToken,7,3,0,0,3,1,3,1,3,1
+j2cpbase,j2cpbase.tokenizer,IntegerLiteralToken,18,20,2,2,3,6,4,2,2,2
+j2cpbase,j2cpbase.tokenizer,TokenizerException,4,0,0,0,2,0,1,0,1,0
+j2cpbase,j2cpbase.tokenizer,LeftParenToken,7,3,0,0,3,1,3,1,3,1
+j2cpbase,j2cpbase.tokenizer,SingleEqualsToken,7,3,0,0,3,1,3,1,3,1
+j2cpbase,j2cpbase.tokenizer,RightParenToken,7,3,0,0,3,1,3,1,3,1
+j2cpbase,j2cpbase.tokenizer,IdentifierToken,36,0,4,0,7,0,6,0,4,0

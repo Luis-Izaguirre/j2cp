@@ -1,0 +1,15 @@
+j2cpbase\tokenizer\SingleEqualsToken.class
+j2cpbase\tokenizer\SymbolPair.class
+j2cpbase\tokenizer\Tokenizer.class
+j2cpbase\tokenizer\LeftParenToken.class
+j2cpbase\tokenizer\LetToken.class
+j2cpbase\tokenizer\IdentifierToken.class
+j2cpbase\tokenizer\Tokenizer$1.class
+j2cpbase\tokenizer\IntegerLiteralToken.class
+j2cpbase\tokenizer\TokenizerException.class
+j2cpbase\tokenizer\Tokenizer$2.class
+j2cpbase\tokenizer\RightParenToken.class
+j2cpbase\tokenizer\PlusToken.class
+j2cpbase\tokenizer\DoubleEqualsToken.class
+j2cpbase\tokenizer\Token.class
+j2cpbase\tokenizer\MinusToken.class
